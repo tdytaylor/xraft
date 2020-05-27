@@ -2,29 +2,26 @@ package in.xnnyygn.xraft.kvstore.message;
 
 import java.util.UUID;
 
-public class GetCommand  {
+public class GetCommand {
 
-    private final String requestId;
-    private final String key;
+  private final String requestId;
+  private final String key;
 
-    public GetCommand(String key) {
-        this.requestId = UUID.randomUUID().toString();
-        this.key = key;
-    }
+  public GetCommand(String key) {
+    this.requestId = UUID.randomUUID().toString();
+    this.key = key;
+  }
 
-    public String getRequestId() {
-        return requestId;
-    }
+  public String getRequestId() {
+    return requestId;
+  }
 
-    public String getKey() {
-        return key;
-    }
+  public String getKey() {
+    return key;
+  }
 
-    @Override
-    public String toString() {
-        return "GetCommand{" +
-                "key='" + key + '\'' +
-                ", requestId='" + requestId + '\'' +
-                '}';
-    }
+  @Override
+  public String toString() {
+    return "GetCommand{" + "key='" + key + '\'' + ", requestId='" + requestId + '\'' + '}';
+  }
 }

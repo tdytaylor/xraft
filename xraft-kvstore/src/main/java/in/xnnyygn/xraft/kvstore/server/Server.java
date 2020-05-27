@@ -12,44 +12,45 @@ import org.slf4j.LoggerFactory;
 
 public class Server {
 
-    private static final Logger logger = LoggerFactory.getLogger(Server.class);
+  private static final Logger logger = LoggerFactory.getLogger(Server.class);
 
-    private final Node node;
-    private final int port;
-    private final Service service;
-    private final NioEventLoopGroup bossGroup = new NioEventLoopGroup(1);
-    private final NioEventLoopGroup workerGroup = new NioEventLoopGroup(4);
+  private final Node node;
+  private final int port;
+  private final Service service;
+  private final NioEventLoopGroup bossGroup = new NioEventLoopGroup(1);
+  private final NioEventLoopGroup workerGroup = new NioEventLoopGroup(4);
 
-    public Server(Node node, int port) {
-        this.node = node;
-        this.service = new Service(node);
-        this.port = port;
-    }
+  public Server(Node node, int port) {
+    this.node = node;
+    this.service = new Service(node);
+    this.port = port;
+  }
 
-    public void start() throws Exception {
-        this.node.start();
+  public void start() throws Exception {
+    this.node.start();
 
-        ServerBootstrap serverBootstrap = new ServerBootstrap()
-                .group(bossGroup, workerGroup)
-                .channel(NioServerSocketChannel.class)
-                .childHandler(new ChannelInitializer<SocketChannel>() {
-                    @Override
-                    protected void initChannel(SocketChannel ch) throws Exception {
-                        ChannelPipeline pipeline = ch.pipeline();
-                        pipeline.addLast(new Encoder());
-                        pipeline.addLast(new Decoder());
-                        pipeline.addLast(new ServiceHandler(service));
-                    }
+    ServerBootstrap serverBootstrap =
+        new ServerBootstrap()
+            .group(bossGroup, workerGroup)
+            .channel(NioServerSocketChannel.class)
+            .childHandler(
+                new ChannelInitializer<SocketChannel>() {
+                  @Override
+                  protected void initChannel(SocketChannel ch) throws Exception {
+                    ChannelPipeline pipeline = ch.pipeline();
+                    pipeline.addLast(new Encoder());
+                    pipeline.addLast(new Decoder());
+                    pipeline.addLast(new ServiceHandler(service));
+                  }
                 });
-        logger.info("server started at port {}", this.port);
-        serverBootstrap.bind(this.port);
-    }
+    logger.info("server started at port {}", this.port);
+    serverBootstrap.bind(this.port);
+  }
 
-    public void stop() throws Exception {
-        logger.info("stopping server");
-        this.node.stop();
-        this.workerGroup.shutdownGracefully();
-        this.bossGroup.shutdownGracefully();
-    }
-
+  public void stop() throws Exception {
+    logger.info("stopping server");
+    this.node.stop();
+    this.workerGroup.shutdownGracefully();
+    this.bossGroup.shutdownGracefully();
+  }
 }

@@ -4,23 +4,22 @@ import in.xnnyygn.xraft.core.node.NodeId;
 
 public class Redirect {
 
-    private final String leaderId;
+  private final String leaderId;
 
-    public Redirect(NodeId leaderId) {
-        this(leaderId != null ? leaderId.getValue() : null);
-    }
+  public Redirect(NodeId leaderId) {
+    this(leaderId != null ? leaderId.getValue() : null);
+  }
 
-    public Redirect(String leaderId) {
-        this.leaderId = leaderId;
-    }
+  public Redirect(String leaderId) {
+    this.leaderId = leaderId;
+  }
 
-    public String getLeaderId() {
-        return leaderId;
-    }
+  public String getLeaderId() {
+    return leaderId;
+  }
 
-    @Override
-    public String toString() {
-        return "Redirect{" + "leaderId=" + leaderId + '}';
-    }
-
+  @Override
+  public String toString() {
+    return "Redirect{" + "leaderId=" + leaderId + '}';
+  }
 }

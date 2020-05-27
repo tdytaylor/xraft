@@ -2,8 +2,7 @@ package in.xnnyygn.xraft.kvstore.client;
 
 public interface Command {
 
-    String getName();
+  String getName();
 
-    void execute(String arguments, CommandContext context);
-
+  void execute(String arguments, CommandContext context);
 }

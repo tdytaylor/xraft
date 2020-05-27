@@ -7,115 +7,117 @@ package in.xnnyygn.xraft.core.node;
  */
 class GroupMember {
 
-    private final NodeEndpoint endpoint;
-    private ReplicatingState replicatingState;
-    private boolean major;
+  private final NodeEndpoint endpoint;
+  private ReplicatingState replicatingState;
+  private boolean major;
 
-    GroupMember(NodeEndpoint endpoint) {
-        this(endpoint, null, true);
+  GroupMember(NodeEndpoint endpoint) {
+    this(endpoint, null, true);
+  }
+
+  GroupMember(NodeEndpoint endpoint, ReplicatingState replicatingState, boolean major) {
+    this.endpoint = endpoint;
+    this.replicatingState = replicatingState;
+    this.major = major;
+  }
+
+  NodeEndpoint getEndpoint() {
+    return endpoint;
+  }
+
+  NodeId getId() {
+    return endpoint.getId();
+  }
+
+  boolean idEquals(NodeId id) {
+    return endpoint.getId().equals(id);
+  }
+
+  void setReplicatingState(ReplicatingState replicatingState) {
+    this.replicatingState = replicatingState;
+  }
+
+  boolean isReplicationStateSet() {
+    return replicatingState != null;
+  }
+
+  private ReplicatingState ensureReplicatingState() {
+    if (replicatingState == null) {
+      throw new IllegalStateException("replication state not set");
     }
+    return replicatingState;
+  }
 
-    GroupMember(NodeEndpoint endpoint, ReplicatingState replicatingState, boolean major) {
-        this.endpoint = endpoint;
-        this.replicatingState = replicatingState;
-        this.major = major;
-    }
+  boolean isMajor() {
+    return major;
+  }
 
-    NodeEndpoint getEndpoint() {
-        return endpoint;
-    }
+  void setMajor(boolean major) {
+    this.major = major;
+  }
 
-    NodeId getId() {
-        return endpoint.getId();
-    }
+  int getNextIndex() {
+    return ensureReplicatingState().getNextIndex();
+  }
 
-    boolean idEquals(NodeId id) {
-        return endpoint.getId().equals(id);
-    }
+  int getMatchIndex() {
+    return ensureReplicatingState().getMatchIndex();
+  }
 
-    void setReplicatingState(ReplicatingState replicatingState) {
-        this.replicatingState = replicatingState;
-    }
+  boolean advanceReplicatingState(int lastEntryIndex) {
+    return ensureReplicatingState().advance(lastEntryIndex);
+  }
 
-    boolean isReplicationStateSet() {
-        return replicatingState != null;
-    }
+  boolean backOffNextIndex() {
+    return ensureReplicatingState().backOffNextIndex();
+  }
 
-    private ReplicatingState ensureReplicatingState() {
-        if (replicatingState == null) {
-            throw new IllegalStateException("replication state not set");
-        }
-        return replicatingState;
-    }
+  void replicateNow() {
+    replicateAt(System.currentTimeMillis());
+  }
 
-    boolean isMajor() {
-        return major;
-    }
+  void replicateAt(long replicatedAt) {
+    ReplicatingState replicatingState = ensureReplicatingState();
+    replicatingState.setReplicating(true);
+    replicatingState.setLastReplicatedAt(replicatedAt);
+  }
 
-    void setMajor(boolean major) {
-        this.major = major;
-    }
+  boolean isReplicating() {
+    return ensureReplicatingState().isReplicating();
+  }
 
-    int getNextIndex() {
-        return ensureReplicatingState().getNextIndex();
-    }
+  void stopReplicating() {
+    ensureReplicatingState().setReplicating(false);
+  }
 
-    int getMatchIndex() {
-        return ensureReplicatingState().getMatchIndex();
-    }
+  /**
+   * Test if should replicate.
+   *
+   * <p>Return true if
+   *
+   * <ol>
+   *   <li>not replicating
+   *   <li>replicated but no response in specified timeout
+   * </ol>
+   *
+   * @param readTimeout read timeout
+   * @return true if should, otherwise false
+   */
+  boolean shouldReplicate(long readTimeout) {
+    ReplicatingState replicatingState = ensureReplicatingState();
+    return !replicatingState.isReplicating()
+        || System.currentTimeMillis() - replicatingState.getLastReplicatedAt() >= readTimeout;
+  }
 
-    boolean advanceReplicatingState(int lastEntryIndex) {
-        return ensureReplicatingState().advance(lastEntryIndex);
-    }
-
-    boolean backOffNextIndex() {
-        return ensureReplicatingState().backOffNextIndex();
-    }
-
-    void replicateNow() {
-        replicateAt(System.currentTimeMillis());
-    }
-
-    void replicateAt(long replicatedAt) {
-        ReplicatingState replicatingState = ensureReplicatingState();
-        replicatingState.setReplicating(true);
-        replicatingState.setLastReplicatedAt(replicatedAt);
-    }
-
-    boolean isReplicating() {
-        return ensureReplicatingState().isReplicating();
-    }
-
-    void stopReplicating() {
-        ensureReplicatingState().setReplicating(false);
-    }
-
-    /**
-     * Test if should replicate.
-     * <p>
-     * Return true if
-     * <ol>
-     * <li>not replicating</li>
-     * <li>replicated but no response in specified timeout</li>
-     * </ol>
-     * </p>
-     *
-     * @param readTimeout read timeout
-     * @return true if should, otherwise false
-     */
-    boolean shouldReplicate(long readTimeout) {
-        ReplicatingState replicatingState = ensureReplicatingState();
-        return !replicatingState.isReplicating() ||
-                System.currentTimeMillis() - replicatingState.getLastReplicatedAt() >= readTimeout;
-    }
-
-    @Override
-    public String toString() {
-        return "GroupMember{" +
-                "endpoint=" + endpoint +
-                ", major=" + major +
-                ", replicatingState=" + replicatingState +
-                '}';
-    }
-
+  @Override
+  public String toString() {
+    return "GroupMember{"
+        + "endpoint="
+        + endpoint
+        + ", major="
+        + major
+        + ", replicatingState="
+        + replicatingState
+        + '}';
+  }
 }

@@ -1,9 +1,7 @@
 package in.xnnyygn.xraft.core.node;
 
 public enum NodeMode {
-
-    STANDALONE,
-    STANDBY,
-    GROUP_MEMBER;
-
+  STANDALONE,
+  STANDBY,
+  GROUP_MEMBER;
 }

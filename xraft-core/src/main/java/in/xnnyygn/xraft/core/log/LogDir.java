@@ -4,18 +4,17 @@ import java.io.File;
 
 public interface LogDir {
 
-    void initialize();
+  void initialize();
 
-    boolean exists();
+  boolean exists();
 
-    File getSnapshotFile();
+  File getSnapshotFile();
 
-    File getEntriesFile();
+  File getEntriesFile();
 
-    File getEntryOffsetIndexFile();
+  File getEntryOffsetIndexFile();
 
-    File get();
+  File get();
 
-    boolean renameTo(LogDir logDir);
-
+  boolean renameTo(LogDir logDir);
 }

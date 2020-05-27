@@ -1,29 +1,27 @@
 package in.xnnyygn.xraft.core.log.snapshot;
 
 import in.xnnyygn.xraft.core.node.NodeEndpoint;
-
-import javax.annotation.Nonnull;
 import java.io.InputStream;
 import java.util.Set;
+import javax.annotation.Nonnull;
 
 // TODO add doc
 public interface Snapshot {
 
-    int getLastIncludedIndex();
+  int getLastIncludedIndex();
 
-    int getLastIncludedTerm();
+  int getLastIncludedTerm();
 
-    @Nonnull
-    Set<NodeEndpoint> getLastConfig();
+  @Nonnull
+  Set<NodeEndpoint> getLastConfig();
 
-    long getDataSize();
+  long getDataSize();
 
-    @Nonnull
-    SnapshotChunk readData(int offset, int length);
+  @Nonnull
+  SnapshotChunk readData(int offset, int length);
 
-    @Nonnull
-    InputStream getDataStream();
+  @Nonnull
+  InputStream getDataStream();
 
-    void close();
-
+  void close();
 }

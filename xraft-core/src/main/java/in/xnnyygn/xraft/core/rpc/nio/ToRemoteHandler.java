@@ -8,25 +8,24 @@ import org.slf4j.LoggerFactory;
 
 class ToRemoteHandler extends AbstractHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(ToRemoteHandler.class);
-    private final NodeId selfNodeId;
+  private static final Logger logger = LoggerFactory.getLogger(ToRemoteHandler.class);
+  private final NodeId selfNodeId;
 
-    ToRemoteHandler(EventBus eventBus, NodeId remoteId, NodeId selfNodeId) {
-        super(eventBus);
-        this.remoteId = remoteId;
-        this.selfNodeId = selfNodeId;
-    }
+  ToRemoteHandler(EventBus eventBus, NodeId remoteId, NodeId selfNodeId) {
+    super(eventBus);
+    this.remoteId = remoteId;
+    this.selfNodeId = selfNodeId;
+  }
 
-    @Override
-    public void channelActive(ChannelHandlerContext ctx) {
-        ctx.write(selfNodeId);
-        channel = new NioChannel(ctx.channel());
-    }
+  @Override
+  public void channelActive(ChannelHandlerContext ctx) {
+    ctx.write(selfNodeId);
+    channel = new NioChannel(ctx.channel());
+  }
 
-    @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        logger.debug("receive {} from {}", msg, remoteId);
-        super.channelRead(ctx, msg);
-    }
-
+  @Override
+  public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    logger.debug("receive {} from {}", msg, remoteId);
+    super.channelRead(ctx, msg);
+  }
 }

@@ -3,45 +3,43 @@ package in.xnnyygn.xraft.core.log.sequence;
 import in.xnnyygn.xraft.core.log.entry.Entry;
 import in.xnnyygn.xraft.core.log.entry.EntryMeta;
 import in.xnnyygn.xraft.core.node.NodeEndpoint;
-
 import java.util.List;
 import java.util.Set;
 
 public interface EntrySequence {
 
-    boolean isEmpty();
+  boolean isEmpty();
 
-    int getFirstLogIndex();
+  int getFirstLogIndex();
 
-    int getLastLogIndex();
+  int getLastLogIndex();
 
-    int getNextLogIndex();
+  int getNextLogIndex();
 
-    List<Entry> subView(int fromIndex);
+  List<Entry> subView(int fromIndex);
 
-    // [fromIndex, toIndex)
-    List<Entry> subList(int fromIndex, int toIndex);
+  // [fromIndex, toIndex)
+  List<Entry> subList(int fromIndex, int toIndex);
 
-    GroupConfigEntryList buildGroupConfigEntryList(Set<NodeEndpoint> initialGroup);
+  GroupConfigEntryList buildGroupConfigEntryList(Set<NodeEndpoint> initialGroup);
 
-    boolean isEntryPresent(int index);
+  boolean isEntryPresent(int index);
 
-    EntryMeta getEntryMeta(int index);
+  EntryMeta getEntryMeta(int index);
 
-    Entry getEntry(int index);
+  Entry getEntry(int index);
 
-    Entry getLastEntry();
+  Entry getLastEntry();
 
-    void append(Entry entry);
+  void append(Entry entry);
 
-    void append(List<Entry> entries);
+  void append(List<Entry> entries);
 
-    void commit(int index);
+  void commit(int index);
 
-    int getCommitIndex();
+  int getCommitIndex();
 
-    void removeAfter(int index);
+  void removeAfter(int index);
 
-    void close();
-
+  void close();
 }

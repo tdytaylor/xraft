@@ -1,10 +1,8 @@
 package in.xnnyygn.xraft.core.node.role;
 
-/**
- * Role name.
- */
+/** Role name. */
 public enum RoleName {
-
-    FOLLOWER, CANDIDATE, LEADER;
-
+  FOLLOWER,
+  CANDIDATE,
+  LEADER;
 }

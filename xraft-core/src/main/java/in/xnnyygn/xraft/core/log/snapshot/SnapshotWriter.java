@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public interface SnapshotWriter extends AutoCloseable {
-    OutputStream getOutput();
+  OutputStream getOutput();
 
-    void write(byte[] data) throws IOException;
+  void write(byte[] data) throws IOException;
 }
