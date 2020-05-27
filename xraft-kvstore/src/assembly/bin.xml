@@ -6,7 +6,7 @@
     <!-- output path will be target/xraft-kvstore-version-bin/xraft-kvstore-version-bin -->
     <includeBaseDirectory>true</includeBaseDirectory>
     <formats>
-<!--        <format>dir</format>-->
+        <format>dir</format>
         <!-- TODO uncomment me-->
         <format>tar.gz</format>
     </formats>
